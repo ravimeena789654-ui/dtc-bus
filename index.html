@@ -48,6 +48,8 @@
 
   if (isAndroid) {
     window.location.replace(intentUrl);
+    // Auto-click the "Open" button as a second attempt (some scanners' in-app browsers ignore the redirect).
+    setTimeout(function () { if (!document.hidden) openLink.click(); }, 400);
   } else if (isIOS) {
     var t = setTimeout(function () { if (!document.hidden) window.location.href = APPSTORE; }, 1800);
     document.addEventListener("visibilitychange", function () { if (document.hidden) clearTimeout(t); });
