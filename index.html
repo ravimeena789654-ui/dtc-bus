@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>DTC Bus Ticket - Sarthi</title>
+<style>
+  :root { --blue:#063C94; --bg:#ffffff; --ink:#1a1a1a; --muted:#555; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#121417; --ink:#f2f2f2; --muted:#aaa; --blue:#5b8fe6; } }
+  :root[data-theme="dark"] { --bg:#121417; --ink:#f2f2f2; --muted:#aaa; --blue:#5b8fe6; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Nirmala UI","Noto Sans Devanagari",system-ui,sans-serif;
+         min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px; box-sizing:border-box; text-align:center; }
+  main { max-width:420px; width:100%; }
+  h1 { font-size:20px; color:var(--blue); margin:0 0 6px; }
+  p { color:var(--muted); font-size:15px; margin:4px 0 20px; line-height:1.5; }
+  a.btn { display:block; padding:14px; margin:10px 0; border-radius:10px; text-decoration:none; font-weight:600; font-size:16px; }
+  .primary { background:var(--blue); color:#fff; }
+  .secondary { border:2px solid var(--blue); color:var(--blue); }
+</style>
+</head>
+<body>
+<main>
+  <h1>DTC बस टिकट / DTC Bus Ticket</h1>
+  <p>Sarthi ऐप खोला जा रहा है…<br>Opening the Sarthi app…</p>
+  <a class="btn primary" id="open" href="#">Sarthi में DTC बस टिकट खोलें<br><small>Open DTC Bus Ticket in Sarthi</small></a>
+  <a class="btn secondary" id="store" href="#">Sarthi ऐप इंस्टॉल करें<br><small>Install the Sarthi app</small></a>
+</main>
+<script>
+  // Sarthi (com.sraoss.dmrc) handles dmrcautope://<any>/<ScreenName> by navigating to <ScreenName>.
+  // ONDCLandingScreen = "Book DTC Bus Ticket" (DTC Tickets / DTC Pass), verified on Sarthi 2.2.4.
+  var SCREEN = "ONDCLandingScreen";
+  var PLAY = "https://play.google.com/store/apps/details?id=com.sraoss.dmrc";
+  var APPSTORE = "https://apps.apple.com/in/app/delhi-metro-sarthi-app/id691105308";
+  var ua = navigator.userAgent || "";
+  var isAndroid = /Android/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  // Android: Chrome opens the app if installed, otherwise goes to the Play Store fallback.
+  var intentUrl = "intent://open/" + SCREEN + "#Intent;scheme=dmrcautope;package=com.sraoss.dmrc;" +
+                  "S.browser_fallback_url=" + encodeURIComponent(PLAY) + ";end";
+  var schemeUrl = "dmrcautope://open/" + SCREEN;
+
+  var openLink = document.getElementById("open");
+  var storeLink = document.getElementById("store");
+  openLink.href = isAndroid ? intentUrl : schemeUrl;
+  storeLink.href = isIOS ? APPSTORE : PLAY;
+
+  if (isAndroid) {
+    window.location.replace(intentUrl);
+  } else if (isIOS) {
+    var t = setTimeout(function () { if (!document.hidden) window.location.href = APPSTORE; }, 1800);
+    document.addEventListener("visibilitychange", function () { if (document.hidden) clearTimeout(t); });
+    window.location.href = schemeUrl;
+  } else {
+    window.location.replace(PLAY);
+  }
+</script>
+</body>
+</html>
